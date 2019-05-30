@@ -34,6 +34,29 @@ impl std::fmt::Display for types::Color {
     }
 }
 
+impl std::fmt::Display for types::Face {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+        let notation = match self {
+        | types::Face::U => "U",
+        | types::Face::D => "D",
+        | types::Face::L => "L",
+        | types::Face::R => "R",
+        | types::Face::F => "F",
+        | types::Face::B => "B",
+        };
+        write!(fmt, "{}", notation)
+    }
+}
+
+impl std::fmt::Display for types::Move {
+    fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
+        match self.spin {
+        | types::Spin::CW  => write!(fmt, "{}", self.face),
+        | types::Spin::CCW => write!(fmt, "{}'", self.face),
+        }
+    }
+}
+
 impl std::fmt::Display for state::Cube {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         write!(

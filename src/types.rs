@@ -10,15 +10,15 @@ pub enum Color {
 }
 
 impl Color {
-    pub fn new_unchecked(face: u16) -> Self {
-        match face {
+    pub fn new_unchecked(color: u16) -> Self {
+        match color {
         | 0b0001 => Color::W,
         | 0b0010 => Color::R,
         | 0b0011 => Color::B,
         | 0b0100 => Color::Y,
         | 0b0101 => Color::G,
         | 0b0110 => Color::O,
-        | _ => panic!("Invalid face: {}", face),
+        | _ => panic!("Invalid color: {}", color),
         }
     }
 }
@@ -50,6 +50,6 @@ pub enum Face {
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub struct Move {
-    face: Face,
-    spin: Spin,
+    pub face: Face,
+    pub spin: Spin,
 }
