@@ -48,7 +48,7 @@ impl std::fmt::Display for types::Face {
     }
 }
 
-impl std::fmt::Display for types::Move {
+impl std::fmt::Display for types::Turn {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         match self.spin {
         | types::Spin::CW  => write!(fmt, "{}", self.face),

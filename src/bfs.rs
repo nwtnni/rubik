@@ -1,16 +1,17 @@
 use std::collections::{HashMap, VecDeque};
 
 use crate::state;
+use crate::types;
 
-pub fn search(cube: &state::Cube) -> Vec<usize> {
+pub fn search(cube: &state::Cube) -> Vec<types::Turn> {
 
     if cube.is_solved() { return vec![] }
 
     let mut queue: VecDeque<state::Cube> = VecDeque::new();
-    let mut cache: HashMap<state::Cube, (state::Cube, usize)> = HashMap::new();
+    let mut cache: HashMap<state::Cube, (state::Cube, types::Turn)> = HashMap::new();
 
-    queue.push_back(cube.clone());
-    cache.insert(cube.clone(), (cube.clone(), 0));
+    queue.push_back(*cube);
+    cache.insert(*cube, (*cube, (types::Face::U, types::Spin::CW).into()));
 
     while let Some(cube) = queue.pop_front() {
         if cube.is_solved() {
@@ -24,11 +25,11 @@ pub fn search(cube: &state::Cube) -> Vec<usize> {
             }
             return path
         }
-        for d in 0..12 {
+        for turn in types::Turn::all() {
             let mut next = cube.clone();
-            next.rotate(d);
+            next.rotate(turn);
             if cache.contains_key(&next) { continue }
-            cache.insert(next, (cube, d));
+            cache.insert(next, (cube, turn));
             queue.push_back(next);
         }
     }

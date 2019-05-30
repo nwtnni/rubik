@@ -30,11 +30,8 @@ pub enum Spin {
 }
 
 impl Spin {
-    pub fn flip(&self) -> Self {
-        match self {
-        | Spin::CW => Spin::CCW,
-        | Spin::CCW => Spin::CW,
-        }
+    pub fn all() -> impl Iterator<Item = &'static Self> {
+        [Spin::CW, Spin::CCW].into_iter()
     }
 }
 
@@ -45,11 +42,35 @@ pub enum Face {
     L,
     R,
     F,
-    B,    
+    B,
+}
+
+impl Face {
+    pub fn all() -> impl Iterator<Item = &'static Self> {
+        [Face::U, Face::D, Face::L, Face::R, Face::F, Face::B].into_iter()
+    }
 }
 
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct Move {
+pub struct Turn {
     pub face: Face,
     pub spin: Spin,
+}
+
+impl Turn {
+    pub fn all() -> impl Iterator<Item = Self> {
+        Face::all().flat_map(|&face| Spin::all().map(move |&spin| Turn { face, spin }))
+    }
+}
+
+impl From<(Face, Spin)> for Turn {
+    fn from((face, spin): (Face, Spin)) -> Turn {
+        Turn { face, spin }
+    }
+}
+
+impl From<usize> for Turn {
+    fn from(n: usize) -> Turn {
+        Turn::all().nth(n % 12).unwrap()
+    }
 }
