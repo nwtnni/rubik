@@ -34,12 +34,23 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
         | Event::Key(Key::Char('B')) => cube.rotate((B, CCW)),
         | Event::Key(Key::Char('s')) => {
             let path = bfs::search(&cube); 
-            for turn in path {
-                cube.rotate(turn); 
+            for turn in &path.turns {
+                cube.rotate(*turn); 
                 writeln!(stdout, "{}\n", cube)?;
                 std::thread::sleep(std::time::Duration::from_secs(1));
             }
-            continue
+
+            for turn in &path.turns {
+                write!(stdout, "{} ", turn)?;
+            }
+
+            writeln!(
+                stdout,
+                "\nSolution length: {}\nNodes explored: {}\nTime taken (ms): {}\n\n",
+                path.turns.len(),
+                path.nodes,
+                path.bench.as_millis(),
+            )?;
         }
         | _ => continue,
         };
