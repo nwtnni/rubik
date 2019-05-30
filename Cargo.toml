@@ -9,5 +9,10 @@ termion = "1.5.2"
 rand = "0.6.5"
 
 [dev-dependencies]
+criterion = "0.2"
 quickcheck = "0.8"
 quickcheck_macros = "0.8"
+
+[[bench]]
+name = "bfs"
+harness = false
