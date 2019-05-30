@@ -31,6 +31,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
         | Event::Key(Key::Char('F')) => cube.rotate_f_ccw(),
         | Event::Key(Key::Char('b')) => cube.rotate_b_cw(),
         | Event::Key(Key::Char('B')) => cube.rotate_b_ccw(),
+        | Event::Key(Key::Char('s')) => {
+            let path = bfs::search(&cube); 
+            for d in path {
+                cube.rotate(d); 
+                writeln!(stdout, "{}\n", cube)?;
+                std::thread::sleep(std::time::Duration::from_secs(1));
+            }
+            continue
+        }
         | _ => continue,
         };
         writeln!(stdout, "{}\n", cube)?;
