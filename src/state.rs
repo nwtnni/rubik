@@ -1,5 +1,5 @@
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Color {
+pub enum Face {
     W,
     R,
     B,
@@ -33,16 +33,23 @@ pub enum Color {
 ///                21    22
 ///
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct Cube([Color; 24]);
+pub struct Cube([Face; 24]);
 
 impl Default for Cube {
     fn default() -> Self {
-        use Color::*;
+        use Face::*;
         Cube([
              W, W, W, W,
              R, R, B, B, O, O, G, G,
              R, R, B, B, O, O, G, G,
              Y, Y, Y, Y,
         ])
+    }
+}
+
+impl std::ops::Index<usize> for Cube {
+    type Output = Face;
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.0[index]
     }
 }
