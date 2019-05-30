@@ -77,20 +77,14 @@ impl Cube {
         *self == SOLVED
     }
 
+    rotate!(rotate_l_cw,  0b1111_1111_0000_0000, 1, (4, 5, 2, 0));
     rotate!(rotate_l_ccw, 0b1111_1111_0000_0000, 1, (0, 2, 5, 4));
-    rotate!(rotate_l_cw, 0b1111_1111_0000_0000, 1, (4, 5, 2, 0));
-
-    // pub fn rotate_l_ccw(&mut self) {
-    //     let into = 0b0000_0000_1111_1111;
-    //     let from = 0b1111_1111_0000_0000;
-    //     let swap = self[0] & from;
-    //     self[0] &= into; self[0] |= self[2] & from;
-    //     self[2] &= into; self[2] |= self[5] & from;
-    //     self[5] &= into; self[5] |= self[4] & from;
-    //     self[4] &= into; self[4] |= swap & from;
-    //     self[1] = self[1].rotate_right(4);
-    // }
-
+    rotate!(rotate_r_cw,  0b0000_0000_1111_1111, 3, (0, 2, 5, 4));
+    rotate!(rotate_r_ccw, 0b0000_0000_1111_1111, 3, (4, 5, 2, 0));
+    rotate!(rotate_u_cw,  0b1111_0000_0000_1111, 0, (4, 3, 2, 1));
+    rotate!(rotate_u_ccw, 0b1111_0000_0000_1111, 0, (1, 2, 3, 4));
+    rotate!(rotate_d_cw,  0b0000_1111_1111_0000, 0, (4, 3, 2, 1));
+    rotate!(rotate_d_ccw, 0b0000_1111_1111_0000, 0, (1, 2, 3, 4));
 }
 
 impl Default for Cube {
