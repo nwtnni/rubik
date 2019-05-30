@@ -1,12 +1,27 @@
+#[repr(u8)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct Face(u8);
+pub enum Face {
+    W = 0b0001,
+    R = 0b0010,
+    B = 0b0011,
+    Y = 0b0100,
+    G = 0b0101,
+    O = 0b0110,
+}
 
-pub const W: Face = Face(0b0000_0001);
-pub const R: Face = Face(0b0000_0010);
-pub const B: Face = Face(0b0000_0011);
-pub const Y: Face = Face(0b0000_0100);
-pub const G: Face = Face(0b0000_0101);
-pub const O: Face = Face(0b0000_0110);
+impl Face {
+    fn new_unchecked(face: u16) -> Self {
+        match face {
+        | 0b0001 => Face::W,
+        | 0b0010 => Face::R,
+        | 0b0011 => Face::B,
+        | 0b0100 => Face::Y,
+        | 0b0101 => Face::G,
+        | 0b0110 => Face::O,
+        | _ => panic!("Invalid face: {}", face),
+        }
+    }
+}
 
 /// Represents a 2x2x2 Rubik's Cube:
 ///
@@ -25,8 +40,16 @@ impl Cube {
     pub fn get(&self, index: usize) -> Face {
         let div = index / 4;
         let rem = index % 4;
-        Face((self.0[div] >> ((3 - rem) << 2)) as u8 & 0b0111)
+        Face::new_unchecked((self.0[div] >> ((3 - rem) << 2)) & 0b0111)
     }
+
+    #[must_use]
+    pub fn rotate_u_cw(&self) -> Self {
+        let face = self[0].rotate_left(8);
+
+        unimplemented!()
+    }
+
 }
 
 impl Default for Cube {
@@ -45,5 +68,12 @@ impl Default for Cube {
             // Y    Y    Y    Y  
             0b_0100_0100_0100_0100,
         ])
+    }
+}
+
+impl std::ops::Index<usize> for Cube {
+    type Output = u16;
+    fn index(&self, index: usize) -> &Self::Output {
+        &self.0[index]
     }
 }

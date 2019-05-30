@@ -22,13 +22,12 @@ macro_rules! cube { () => {
 impl std::fmt::Display for state::Face {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         let color = match *self {
-        | state::W => W,
-        | state::R => R,
-        | state::B => B,
-        | state::Y => Y,
-        | state::G => G,
-        | state::O => O,
-        | _ => unreachable!(),
+        | state::Face::W => W,
+        | state::Face::R => R,
+        | state::Face::B => B,
+        | state::Face::Y => Y,
+        | state::Face::G => G,
+        | state::Face::O => O,
         };
         write!(fmt, "{}██", color)
     }
