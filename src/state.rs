@@ -137,7 +137,7 @@ impl Cube {
     }
 
     pub fn rotate(&mut self, direction: usize) {
-        match direction {
+        match direction % 12 {
         | 00 => self.rotate_u_cw(),
         | 01 => self.rotate_u_ccw(),
         | 02 => self.rotate_d_cw(),
@@ -150,7 +150,7 @@ impl Cube {
         | 09 => self.rotate_f_ccw(),
         | 10 => self.rotate_b_cw(),
         | 11 => self.rotate_b_ccw(),
-        | _ => panic!("Invalid direction: {}", direction),
+        | _ => unreachable!(),
         }
     }
 }

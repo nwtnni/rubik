@@ -3,6 +3,7 @@ use std::io::Write;
 use termion::event::{Event, Key};
 use termion::input::TermRead;
 
+mod test;
 mod display;
 mod state;
 
