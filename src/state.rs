@@ -1,4 +1,4 @@
-#[repr(u8)]
+#[repr(u16)]
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
 pub enum Face {
     W = 0b0001,
@@ -36,19 +36,14 @@ impl Face {
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Cube([u16; 6]);
 
+use Face::*;
 pub const SOLVED: Cube = Cube([
-    // W    W    W    W
-    0b_0001_0001_0001_0001,
-    // R    R    R    R
-    0b_0010_0010_0010_0010,
-    // B    B    B    B
-    0b_0011_0011_0011_0011,
-    // O    O    O    O
-    0b_0110_0110_0110_0110,
-    // G    G    G    G
-    0b_0101_0101_0101_0101,
-    // Y    Y    Y    Y  
-    0b_0100_0100_0100_0100,
+    (W as u16) << 12 | (W as u16) << 08 | (W as u16) << 04 | (W as u16) << 00,
+    (R as u16) << 12 | (R as u16) << 08 | (R as u16) << 04 | (R as u16) << 00,
+    (B as u16) << 12 | (B as u16) << 08 | (B as u16) << 04 | (B as u16) << 00,
+    (O as u16) << 12 | (O as u16) << 08 | (O as u16) << 04 | (O as u16) << 00,
+    (G as u16) << 12 | (G as u16) << 08 | (G as u16) << 04 | (G as u16) << 00,
+    (Y as u16) << 12 | (Y as u16) << 08 | (Y as u16) << 04 | (Y as u16) << 00,
 ]);
 
 macro_rules! rotate_ud {
