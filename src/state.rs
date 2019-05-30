@@ -19,27 +19,39 @@ pub const O: Face = Face(0b0000_0110);
 ///        2122
 ///
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct Cube([u32; 3]);
+pub struct Cube(u16, u32, u32, u16);
 
 impl Cube {
     pub fn get(&self, index: usize) -> Face {
-        let div = index / 8;
-        let rem = index % 8;
-        Face((self.0[div] >> ((7 - rem) << 2)) as u8 & 0b0111)
+        let div = index / 4;
+        let rem = index % 4;
+        let word = match div {
+        | 0 => self.0,
+        | 1 => (self.1 >> 16) as u16,
+        | 2 => self.1 as u16,
+        | 3 => (self.2 >> 16) as u16,
+        | 4 => self.2 as u16,
+        | 5 => self.3,
+        | _ => panic!("Invalid index: {}", index),
+        };
+        Face((word >> ((3 - rem) << 2)) as u8 & 0b1111)
     }
 }
 
 impl Default for Cube {
     fn default() -> Self {
-        Cube([
-            //W    W    W    W    R    R    B    B 
-            0b0001_0001_0001_0001_0010_0010_0011_0011,
+        Cube(
+            // W    W    W    W
+            0b_0001_0001_0001_0001,
 
-            //O    O    G    G    R    R    B    B 
-            0b0110_0110_0101_0101_0010_0010_0011_0011,
+            // R    R    B    B    O    O    G    G
+            0b_0010_0010_0011_0011_0110_0110_0101_0101,
 
-            //O    O    G    G    Y    Y    Y    Y 
-            0b0110_0110_0101_0101_0100_0100_0100_0100,
-        ])
+            // R    R    B    B    O    O    G    G
+            0b_0010_0010_0011_0011_0110_0110_0101_0101,
+            
+            // Y    Y    Y    Y  
+            0b_0100_0100_0100_0100,
+        )
     }
 }
