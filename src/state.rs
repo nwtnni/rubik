@@ -36,6 +36,26 @@ impl Cube {
         };
         Face((word >> ((3 - rem) << 2)) as u8 & 0b1111)
     }
+
+    #[must_use]
+    pub fn rotate_u_cw(&self) -> Self {
+        Cube(self.0.rotate_left(8), self.1.rotate_left(8), self.2, self.3)
+    }
+
+    #[must_use]
+    pub fn rotate_u_ccw(&self) -> Self {
+        Cube(self.0.rotate_right(8), self.1.rotate_right(8), self.2, self.3)
+    }
+
+    #[must_use]
+    pub fn rotate_d_cw(&self) -> Self {
+        Cube(self.0, self.1, self.2.rotate_left(8), self.3.rotate_left(8))
+    }
+
+    #[must_use]
+    pub fn rotate_d_ccw(&self) -> Self {
+        Cube(self.0, self.1, self.2.rotate_right(8), self.3.rotate_right(8))
+    }
 }
 
 impl Default for Cube {
