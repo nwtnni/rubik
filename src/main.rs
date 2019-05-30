@@ -3,21 +3,16 @@ use std::io::Write;
 use termion::event::{Event, Key};
 use termion::input::TermRead;
 
-mod types;
-mod state;
-mod display;
-mod bfs;
-
 fn main() -> Result<(), Box<dyn std::error::Error>>{
 
     let stdin = std::io::stdin();
     let mut stdout = std::io::stdout();
-    let mut cube = state::Cube::default();
+    let mut cube = rubik::state::Cube::default();
     writeln!(stdout, "{}\n", cube)?;
 
     for event in stdin.events() {
-        use types::Face::*;
-        use types::Spin::*;
+        use rubik::types::Face::*;
+        use rubik::types::Spin::*;
         match event? {
         | Event::Key(Key::Char('q')) => break,
         | Event::Key(Key::Char('u')) => cube.rotate((U, CW)),
@@ -33,7 +28,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
         | Event::Key(Key::Char('b')) => cube.rotate((B, CW)),
         | Event::Key(Key::Char('B')) => cube.rotate((B, CCW)),
         | Event::Key(Key::Char('s')) => {
-            let path = bfs::search(&cube); 
+            let path = rubik::bfs::search(&cube); 
             for turn in &path.turns {
                 cube.rotate(*turn); 
                 writeln!(stdout, "{}\n", cube)?;
