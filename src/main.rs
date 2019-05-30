@@ -5,9 +5,10 @@ use termion::input::TermRead;
 
 #[cfg(test)]
 mod test;
-mod bfs;
-mod display;
+mod types;
 mod state;
+mod display;
+mod bfs;
 
 fn main() -> Result<(), Box<dyn std::error::Error>>{
 

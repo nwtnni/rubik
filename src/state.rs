@@ -1,27 +1,5 @@
-#[repr(u16)]
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Face {
-    W = 0b0001,
-    R = 0b0010,
-    B = 0b0011,
-    Y = 0b0100,
-    G = 0b0101,
-    O = 0b0110,
-}
-
-impl Face {
-    fn new_unchecked(face: u16) -> Self {
-        match face {
-        | 0b0001 => Face::W,
-        | 0b0010 => Face::R,
-        | 0b0011 => Face::B,
-        | 0b0100 => Face::Y,
-        | 0b0101 => Face::G,
-        | 0b0110 => Face::O,
-        | _ => panic!("Invalid face: {}", face),
-        }
-    }
-}
+use crate::types::Color;
+use crate::types::Color::*;
 
 /// Represents a 2x2x2 Rubik's Cube:
 ///
@@ -36,7 +14,6 @@ impl Face {
 #[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Cube([u16; 6]);
 
-use Face::*;
 pub const SOLVED: Cube = Cube([
     (W as u16) << 12 | (W as u16) << 08 | (W as u16) << 04 | (W as u16) << 00,
     (R as u16) << 12 | (R as u16) << 08 | (R as u16) << 04 | (R as u16) << 00,
@@ -73,10 +50,10 @@ macro_rules! rotate_lr {
 }
 
 impl Cube {
-    pub fn get(&self, index: usize) -> Face {
+    pub fn get(&self, index: usize) -> Color {
         let div = index / 4;
         let rem = index % 4;
-        Face::new_unchecked((self.0[div] >> ((3 - rem) << 2)) & 0b0111)
+        Color::new_unchecked((self.0[div] >> ((3 - rem) << 2)) & 0b0111)
     }
 
     pub fn is_solved(&self) -> bool {

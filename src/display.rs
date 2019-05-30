@@ -1,6 +1,7 @@
 use termion::color;
 
 use crate::state;
+use crate::types;
 
 const W: color::Fg<&'static dyn color::Color> = color::Fg(&color::White);
 const R: color::Fg<&'static dyn color::Color> = color::Fg(&color::Red);
@@ -19,15 +20,15 @@ macro_rules! cube { () => {
        {}{}{}"
 } }
 
-impl std::fmt::Display for state::Face {
+impl std::fmt::Display for types::Color {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
         let color = match *self {
-        | state::Face::W => W,
-        | state::Face::R => R,
-        | state::Face::B => B,
-        | state::Face::Y => Y,
-        | state::Face::G => G,
-        | state::Face::O => O,
+        | types::Color::W => W,
+        | types::Color::R => R,
+        | types::Color::B => B,
+        | types::Color::Y => Y,
+        | types::Color::G => G,
+        | types::Color::O => O,
         };
         write!(fmt, "{}██", color)
     }
