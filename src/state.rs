@@ -51,14 +51,27 @@ pub const SOLVED: Cube = Cube([
     0b_0100_0100_0100_0100,
 ]);
 
-macro_rules! rotate {
-    ($name:ident, $from:expr, $face:expr, $rotate_dir:ident, $ring:expr) => {
+macro_rules! rotate_ud {
+    ($name:ident, $mask:expr, $face:expr, $rotate_dir:ident, $ring:expr) => {
         pub fn $name(&mut self) {
-            let swap = self[$ring.3] & $from;
-            self[$ring.3] &= !$from; self[$ring.3] |= self[$ring.2] & $from;
-            self[$ring.2] &= !$from; self[$ring.2] |= self[$ring.1] & $from;
-            self[$ring.1] &= !$from; self[$ring.1] |= self[$ring.0] & $from;
-            self[$ring.0] &= !$from; self[$ring.0] |= swap & $from;
+            let swap = self[$ring.3] & $mask;
+            self[$ring.3] &= !$mask; self[$ring.3] |= self[$ring.2] & $mask;
+            self[$ring.2] &= !$mask; self[$ring.2] |= self[$ring.1] & $mask;
+            self[$ring.1] &= !$mask; self[$ring.1] |= self[$ring.0] & $mask;
+            self[$ring.0] &= !$mask; self[$ring.0] |= swap & $mask;
+            self[$face] = self[$face].$rotate_dir(4);
+        }
+    }
+}
+
+macro_rules! rotate_lr {
+    ($name:ident, $mask:expr, $face:expr, $rotate_dir:ident, $ring:expr) => {
+        pub fn $name(&mut self) {
+            let swap = (self[$ring.0] & !$mask).rotate_left(8);
+            self[$ring.0] &= $mask; self[$ring.0] |= (self[$ring.1] & $mask).rotate_left(8);
+            self[$ring.1] &= !$mask; self[$ring.1] |= self[$ring.2] & $mask;
+            self[$ring.2] &= !$mask; self[$ring.2] |= self[$ring.3] & $mask;
+            self[$ring.3] &= !$mask; self[$ring.3] |= swap;
             self[$face] = self[$face].$rotate_dir(4);
         }
     }
@@ -75,53 +88,17 @@ impl Cube {
         *self == SOLVED
     }
 
-    // rotate!(rotate_l_cw,  0b1111_1111_0000_0000, 1, rotate_left,  (2, 5, 4, 0));
-    // rotate!(rotate_l_ccw, 0b1111_1111_0000_0000, 1, rotate_right, (0, 4, 5, 2));
+    rotate_ud!(rotate_u_cw,  0b1111_0000_0000_1111, 0, rotate_left,  (4, 3, 2, 1));
+    rotate_ud!(rotate_u_ccw, 0b1111_0000_0000_1111, 0, rotate_right, (1, 2, 3, 4));
 
-    // rotate!(rotate_r_cw,  0b0000_0000_1111_1111, 3, rotate_left,  (0, 4, 5, 2));
-    // rotate!(rotate_r_ccw, 0b0000_0000_1111_1111, 3, rotate_right, (2, 5, 4, 0));
+    rotate_ud!(rotate_d_cw,  0b0000_1111_1111_0000, 5, rotate_left,  (1, 2, 3, 4));
+    rotate_ud!(rotate_d_ccw, 0b0000_1111_1111_0000, 5, rotate_right, (4, 3, 2, 1));
 
-    rotate!(rotate_u_cw,  0b1111_0000_0000_1111, 0, rotate_left,  (4, 3, 2, 1));
-    rotate!(rotate_u_ccw, 0b1111_0000_0000_1111, 0, rotate_right, (1, 2, 3, 4));
+    rotate_lr!(rotate_l_cw,  0b1111_1111_0000_0000, 1, rotate_left,  (4, 5, 2, 0));
+    rotate_lr!(rotate_l_ccw, 0b1111_1111_0000_0000, 1, rotate_right, (4, 0, 2, 5));
 
-    rotate!(rotate_d_cw,  0b0000_1111_1111_0000, 5, rotate_left,  (1, 2, 3, 4));
-    rotate!(rotate_d_ccw, 0b0000_1111_1111_0000, 5, rotate_right, (4, 3, 2, 1));
-
-    pub fn rotate_l_cw(&mut self) {
-        let swap = (self[4] & 0b0000_0000_1111_1111).rotate_left(8);
-        self[4] &= !0b0000_0000_1111_1111; self[4] |= (self[5] & 0b1111_1111_0000_0000).rotate_left(8);
-        self[5] &= !0b1111_1111_0000_0000; self[5] |= self[2] & 0b1111_1111_0000_0000;
-        self[2] &= !0b1111_1111_0000_0000; self[2] |= self[0] & 0b1111_1111_0000_0000;
-        self[0] &= !0b1111_1111_0000_0000; self[0] |= swap;
-        self[1] = self[1].rotate_left(4);
-    }
-
-    pub fn rotate_l_ccw(&mut self) {
-        let swap = (self[0] & 0b1111_1111_0000_0000).rotate_left(8);
-        self[0] &= !0b1111_1111_0000_0000; self[0] |= self[2] & 0b1111_1111_0000_0000;
-        self[2] &= !0b1111_1111_0000_0000; self[2] |= self[5] & 0b1111_1111_0000_0000;
-        self[5] &= !0b0111_1111_0000_0000; self[5] |= (self[4] & 0b0000_0000_1111_1111).rotate_left(8);
-        self[4] &= !0b0000_0000_1111_1111; self[4] |= swap;
-        self[1] = self[1].rotate_right(4);
-    }
-
-    pub fn rotate_r_cw(&mut self) {
-        let swap = (self[0] & 0b0000_0000_1111_1111).rotate_left(8);
-        self[0] &= !0b0000_0000_1111_1111; self[0] |= self[2] & 0b0000_0000_1111_1111;
-        self[2] &= !0b0000_0000_1111_1111; self[2] |= self[5] & 0b0000_0000_1111_1111;
-        self[5] &= !0b0000_0000_1111_1111; self[5] |= (self[4] & 0b1111_1111_0000_0000).rotate_left(8);
-        self[4] &= !0b1111_1111_0000_0000; self[4] |= swap;
-        self[3] = self[3].rotate_left(4);
-    }
-
-    pub fn rotate_r_ccw(&mut self) {
-        let swap = (self[4] & 0b1111_1111_0000_0000).rotate_left(8);
-        self[4] &= !0b1111_1111_0000_0000; self[4] |= (self[5] & 0b0000_0000_1111_1111).rotate_left(8);
-        self[5] &= !0b0000_0000_1111_1111; self[5] |= self[2] & 0b0000_0000_1111_1111;
-        self[2] &= !0b0000_0000_1111_1111; self[2] |= self[0] & 0b0000_0000_1111_1111;
-        self[0] &= !0b0000_0000_1111_1111; self[0] |= swap;
-        self[3] = self[3].rotate_right(4);
-    }
+    rotate_lr!(rotate_r_cw,  0b0000_0000_1111_1111, 3, rotate_left,  (4, 0, 2, 5));
+    rotate_lr!(rotate_r_ccw, 0b0000_0000_1111_1111, 3, rotate_right, (4, 5, 2, 0));
 
     pub fn rotate_f_cw(&mut self) {
         let swap = (self[1] & 0b0000_0000_1111_1111).rotate_left(4);
