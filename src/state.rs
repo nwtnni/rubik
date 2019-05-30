@@ -75,17 +75,35 @@ impl Cube {
         *self == SOLVED
     }
 
-    rotate!(rotate_l_cw,  0b1111_1111_0000_0000, 1, rotate_left,  (2, 5, 4, 0));
-    rotate!(rotate_l_ccw, 0b1111_1111_0000_0000, 1, rotate_right, (0, 4, 5, 2));
+    // rotate!(rotate_l_cw,  0b1111_1111_0000_0000, 1, rotate_left,  (2, 5, 4, 0));
+    // rotate!(rotate_l_ccw, 0b1111_1111_0000_0000, 1, rotate_right, (0, 4, 5, 2));
 
-    rotate!(rotate_r_cw,  0b0000_0000_1111_1111, 3, rotate_left,  (0, 4, 5, 2));
-    rotate!(rotate_r_ccw, 0b0000_0000_1111_1111, 3, rotate_right, (2, 5, 4, 0));
+    // rotate!(rotate_r_cw,  0b0000_0000_1111_1111, 3, rotate_left,  (0, 4, 5, 2));
+    // rotate!(rotate_r_ccw, 0b0000_0000_1111_1111, 3, rotate_right, (2, 5, 4, 0));
 
     rotate!(rotate_u_cw,  0b1111_0000_0000_1111, 0, rotate_left,  (4, 3, 2, 1));
     rotate!(rotate_u_ccw, 0b1111_0000_0000_1111, 0, rotate_right, (1, 2, 3, 4));
 
     rotate!(rotate_d_cw,  0b0000_1111_1111_0000, 5, rotate_left,  (1, 2, 3, 4));
     rotate!(rotate_d_ccw, 0b0000_1111_1111_0000, 5, rotate_right, (4, 3, 2, 1));
+
+    pub fn rotate_l_cw(&mut self) {
+        let swap = (self[4] & 0b0000_0000_1111_1111).rotate_left(8);
+        self[4] &= !0b0000_0000_1111_1111; self[4] |= (self[5] & 0b1111_1111_0000_0000).rotate_left(8);
+        self[5] &= !0b1111_1111_0000_0000; self[5] |= self[2] & 0b1111_1111_0000_0000;
+        self[2] &= !0b1111_1111_0000_0000; self[2] |= self[0] & 0b1111_1111_0000_0000;
+        self[0] &= !0b1111_1111_0000_0000; self[0] |= swap;
+        self[1].rotate_left(4);
+    }
+
+    pub fn rotate_l_ccw(&mut self) {
+        let swap = (self[0] & 0b1111_1111_0000_0000).rotate_left(8);
+        self[0] &= !0b1111_1111_0000_0000; self[0] |= self[2] & 0b1111_1111_0000_0000;
+        self[2] &= !0b1111_1111_0000_0000; self[2] |= self[5] & 0b1111_1111_0000_0000;
+        self[5] &= !0b0111_1111_0000_0000; self[5] |= (self[4] & 0b0000_0000_1111_1111).rotate_left(8);
+        self[4] &= !0b0000_0000_1111_1111; self[4] |= swap;
+        self[1].rotate_right(4);
+    }
 
     pub fn rotate_f_cw(&mut self) {
         let swap = (self[1] & 0b0000_0000_1111_1111).rotate_left(4);
