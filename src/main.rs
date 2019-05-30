@@ -4,5 +4,5 @@ mod state;
 fn main() {
     println!("{}", std::mem::size_of::<state::Cube>());
     let cube = state::Cube::default();
-    println!("{}", cube.rotate_u_cw());
+    println!("{}", cube);
 }
