@@ -21,13 +21,14 @@ macro_rules! cube { () => {
 
 impl std::fmt::Display for state::Face {
     fn fmt(&self, fmt: &mut std::fmt::Formatter) -> std::fmt::Result {
-        let color = match self {
-        | state::Face::W => W,
-        | state::Face::R => R,
-        | state::Face::B => B,
-        | state::Face::Y => Y,
-        | state::Face::G => G,
-        | state::Face::O => O,
+        let color = match *self {
+        | state::W => W,
+        | state::R => R,
+        | state::B => B,
+        | state::Y => Y,
+        | state::G => G,
+        | state::O => O,
+        | _ => unreachable!(),
         };
         write!(fmt, "{}██", color)
     }
@@ -38,12 +39,12 @@ impl std::fmt::Display for state::Cube {
         write!(
             fmt,
             cube!(),
-            self[00], self[03], self[01], self[02],
-            self[04], self[11], self[10], self[09],
-            self[12], self[05], self[19], self[18],
-            self[06], self[07], self[17], self[08],
-            self[13], self[14], self[15], self[16],
-            self[20], self[23], self[21], self[22],
+            self.get(00), self.get(03), self.get(01), self.get(02),
+            self.get(04), self.get(11), self.get(10), self.get(09),
+            self.get(12), self.get(05), self.get(19), self.get(18),
+            self.get(06), self.get(07), self.get(17), self.get(08),
+            self.get(13), self.get(14), self.get(15), self.get(16),
+            self.get(20), self.get(23), self.get(21), self.get(22),
             color::Fg(color::Reset),
         )
     }

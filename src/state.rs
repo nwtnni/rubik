@@ -1,12 +1,12 @@
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub enum Face {
-    W,
-    R,
-    B,
-    Y,
-    G,
-    O,
-}
+pub struct Face(u8);
+
+pub const W: Face = Face(0b0000_0001);
+pub const R: Face = Face(0b0000_0010);
+pub const B: Face = Face(0b0000_0011);
+pub const Y: Face = Face(0b0000_0100);
+pub const G: Face = Face(0b0000_0101);
+pub const O: Face = Face(0b0000_0110);
 
 /// Represents a 2x2x2 Rubik's Cube:
 ///
@@ -19,23 +19,27 @@ pub enum Face {
 ///        2122
 ///
 #[derive(Copy, Clone, Debug, PartialEq, Eq)]
-pub struct Cube([Face; 24]);
+pub struct Cube([u32; 3]);
 
-impl Default for Cube {
-    fn default() -> Self {
-        use Face::*;
-        Cube([
-             W, W, W, W,
-             R, R, B, B, O, O, G, G,
-             R, R, B, B, O, O, G, G,
-             Y, Y, Y, Y,
-        ])
+impl Cube {
+    pub fn get(&self, index: usize) -> Face {
+        let div = index / 8;
+        let rem = index % 8;
+        Face((self.0[div] >> ((7 - rem) << 2)) as u8 & 0b0111)
     }
 }
 
-impl std::ops::Index<usize> for Cube {
-    type Output = Face;
-    fn index(&self, index: usize) -> &Self::Output {
-        &self.0[index]
+impl Default for Cube {
+    fn default() -> Self {
+        Cube([
+            //W    W    W    W    R    R    B    B 
+            0b0001_0001_0001_0001_0010_0010_0011_0011,
+
+            //O    O    G    G    R    R    B    B 
+            0b0110_0110_0101_0101_0010_0010_0011_0011,
+
+            //O    O    G    G    Y    Y    Y    Y 
+            0b0110_0110_0101_0101_0100_0100_0100_0100,
+        ])
     }
 }
