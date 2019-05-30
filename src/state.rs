@@ -135,6 +135,24 @@ impl Cube {
         self[0] &= !0b1111_0000_0000_1111; self[0] |= swap;
         self[4] = self[4].rotate_right(4);
     }
+
+    pub fn rotate(&mut self, direction: usize) {
+        match direction {
+        | 00 => self.rotate_u_cw(),
+        | 01 => self.rotate_u_ccw(),
+        | 02 => self.rotate_d_cw(),
+        | 03 => self.rotate_d_ccw(),
+        | 04 => self.rotate_l_cw(),
+        | 05 => self.rotate_l_ccw(),
+        | 06 => self.rotate_r_cw(),
+        | 07 => self.rotate_r_ccw(),
+        | 08 => self.rotate_f_cw(),
+        | 09 => self.rotate_f_ccw(),
+        | 10 => self.rotate_b_cw(),
+        | 11 => self.rotate_b_ccw(),
+        | _ => panic!("Invalid direction: {}", direction),
+        }
+    }
 }
 
 impl Default for Cube {
