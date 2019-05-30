@@ -33,7 +33,7 @@ impl Face {
 ///      2122
 ///        2023
 ///
-#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+#[derive(Copy, Clone, Debug, PartialEq, Eq, Hash)]
 pub struct Cube([u16; 6]);
 
 pub const SOLVED: Cube = Cube([

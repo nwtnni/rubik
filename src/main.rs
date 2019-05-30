@@ -3,7 +3,9 @@ use std::io::Write;
 use termion::event::{Event, Key};
 use termion::input::TermRead;
 
+#[cfg(test)]
 mod test;
+mod bfs;
 mod display;
 mod state;
 
