@@ -105,6 +105,23 @@ impl Cube {
         self[2] = self[2].rotate_right(4);
     }
 
+    pub fn rotate_b_cw(&mut self) {
+        let swap = (self[0] & 0b1111_0000_0000_1111).rotate_right(4);
+        self[0] &= !0b1111_0000_0000_1111; self[0] |= (self[3] & 0b0000_0000_1111_1111).rotate_right(4);
+        self[3] &= !0b0000_0000_1111_1111; self[3] |= (self[5] & 0b0000_1111_1111_0000).rotate_right(4);
+        self[5] &= !0b0000_1111_1111_0000; self[5] |= (self[1] & 0b1111_1111_0000_0000).rotate_right(4);
+        self[1] &= !0b1111_1111_0000_0000; self[1] |= swap;
+        self[4] = self[4].rotate_left(4);
+    }
+
+    pub fn rotate_b_ccw(&mut self) {
+        let swap = (self[1] & 0b1111_1111_0000_0000).rotate_left(4);
+        self[1] &= !0b1111_1111_0000_0000; self[1] |= (self[5] & 0b0000_1111_1111_0000).rotate_left(4);
+        self[5] &= !0b0000_1111_1111_0000; self[5] |= (self[3] & 0b0000_0000_1111_1111).rotate_left(4);
+        self[3] &= !0b0000_0000_1111_1111; self[3] |= (self[0] & 0b1111_0000_0000_1111).rotate_left(4);
+        self[0] &= !0b1111_0000_0000_1111; self[0] |= swap;
+        self[4] = self[4].rotate_right(4);
+    }
 }
 
 impl Default for Cube {
