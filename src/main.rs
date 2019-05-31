@@ -1,33 +1,31 @@
-use std::io::Write;
-
-use termion::event::{Event, Key};
-use termion::input::TermRead;
+use std::io::{BufRead, BufReader, Write};
 
 fn main() -> Result<(), Box<dyn std::error::Error>>{
 
-    let stdin = std::io::stdin();
+    let stdin = BufReader::new(std::io::stdin());
     let mut stdout = std::io::stdout();
     let mut cube = rubik::state::Cube::default();
+
     writeln!(stdout, "{}\n", cube)?;
 
-    for event in stdin.events() {
+    for line in stdin.lines() {
         use rubik::types::Face::*;
         use rubik::types::Spin::*;
-        match event? {
-        | Event::Key(Key::Char('q')) => break,
-        | Event::Key(Key::Char('u')) => cube.rotate((U, CW)),
-        | Event::Key(Key::Char('U')) => cube.rotate((U, CCW)),
-        | Event::Key(Key::Char('d')) => cube.rotate((D, CW)),
-        | Event::Key(Key::Char('D')) => cube.rotate((D, CCW)),
-        | Event::Key(Key::Char('l')) => cube.rotate((L, CW)),
-        | Event::Key(Key::Char('L')) => cube.rotate((L, CCW)),
-        | Event::Key(Key::Char('r')) => cube.rotate((R, CW)),
-        | Event::Key(Key::Char('R')) => cube.rotate((R, CCW)),
-        | Event::Key(Key::Char('f')) => cube.rotate((F, CW)),
-        | Event::Key(Key::Char('F')) => cube.rotate((F, CCW)),
-        | Event::Key(Key::Char('b')) => cube.rotate((B, CW)),
-        | Event::Key(Key::Char('B')) => cube.rotate((B, CCW)),
-        | Event::Key(Key::Char('s')) => {
+        match line?.as_ref() {
+        | "q" => break,
+        | "u" => cube.rotate((U, CW)),
+        | "U" => cube.rotate((U, CCW)),
+        | "d" => cube.rotate((D, CW)),
+        | "D" => cube.rotate((D, CCW)),
+        | "l" => cube.rotate((L, CW)),
+        | "L" => cube.rotate((L, CCW)),
+        | "r" => cube.rotate((R, CW)),
+        | "R" => cube.rotate((R, CCW)),
+        | "f" => cube.rotate((F, CW)),
+        | "F" => cube.rotate((F, CCW)),
+        | "b" => cube.rotate((B, CW)),
+        | "B" => cube.rotate((B, CCW)),
+        | "s" => {
             let path = rubik::bfs::search(&cube); 
             for turn in &path.turns {
                 cube.rotate(*turn); 
@@ -47,7 +45,15 @@ fn main() -> Result<(), Box<dyn std::error::Error>>{
                 path.bench.as_millis(),
             )?;
         }
-        | _ => continue,
+        | randomize => {
+            if let Ok(randomize) = randomize.parse::<usize>() {
+                for _ in 0..randomize {
+                    cube.rotate(rand::random::<usize>());
+                }
+            } else {
+                continue
+            }
+        }
         };
         writeln!(stdout, "{}\n", cube)?;
     }
