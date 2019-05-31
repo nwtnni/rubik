@@ -8,7 +8,7 @@ fn bfs_benchmark(c: &mut criterion::Criterion) {
             for _ in 0..turns { cube.rotate(rand::random::<usize>()); }
             b.iter(|| rubik::bfs::search(&cube));
         },
-        &[1, 2, 3, 4, 5],
+        &[1, 5, 10, 25, 100],
     );
 }
 
