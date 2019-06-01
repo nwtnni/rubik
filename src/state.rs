@@ -57,10 +57,7 @@ impl Cube {
     }
 
     pub fn is_solved(&self) -> bool {
-        for face in 0..6 {
-            if self[face] != self[face].rotate_left(4) { return false }
-        }
-        true
+        self.0.iter().all(|face| *face == face.rotate_left(4))
     }
 
     rotate_ud!(rotate_u_cw,  0b1111_0000_0000_1111, 0, rotate_left,  (4, 3, 2, 1));
