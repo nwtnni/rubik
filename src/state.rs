@@ -60,11 +60,51 @@ impl Cube {
         self.0.iter().all(|face| *face == face.rotate_left(4))
     }
 
+    pub fn isomorphic(&self) -> [Cube; 24] {
+        [
+            // W on top
+            Cube([self[0].rotate_left(00), self[1], self[2], self[3], self[4], self[5].rotate_right(00)]),
+            Cube([self[0].rotate_left(04), self[2], self[3], self[4], self[1], self[5].rotate_right(04)]),
+            Cube([self[0].rotate_left(08), self[3], self[4], self[1], self[2], self[5].rotate_right(08)]),
+            Cube([self[0].rotate_left(12), self[4], self[1], self[2], self[3], self[5].rotate_right(12)]),
+
+            // Y on top
+            Cube([self[5].rotate_right(08), self[1], self[2], self[3], self[4], self[0].rotate_left(08)]),
+            Cube([self[5].rotate_right(12), self[2], self[3], self[4], self[1], self[0].rotate_left(12)]),
+            Cube([self[5].rotate_right(00), self[3], self[4], self[1], self[2], self[0].rotate_left(00)]),
+            Cube([self[5].rotate_right(04), self[4], self[1], self[2], self[3], self[0].rotate_left(04)]),
+
+            // G on top
+            Cube([self[1].rotate_left(00), self[5].rotate_right(04), self[2].rotate_right(04), self[0].rotate_right(04), self[4].rotate_left(04), self[3].rotate_right(08)]), 
+            Cube([self[1].rotate_left(04), self[2].rotate_right(04), self[0].rotate_right(04), self[4].rotate_left(04), self[5].rotate_right(04), self[3].rotate_right(12)]), 
+            Cube([self[1].rotate_left(08), self[0].rotate_right(04), self[4].rotate_left(04), self[5].rotate_right(04), self[2].rotate_right(04), self[3].rotate_right(00)]), 
+            Cube([self[1].rotate_left(12), self[4].rotate_left(04), self[5].rotate_right(04), self[2].rotate_right(04), self[0].rotate_right(04), self[3].rotate_right(04)]), 
+
+            // B on top
+            Cube([self[3].rotate_right(00), self[5].rotate_left(04), self[2].rotate_left(04), self[0].rotate_left(04), self[4].rotate_right(04), self[1].rotate_left(08)]), 
+            Cube([self[3].rotate_right(04), self[2].rotate_left(04), self[0].rotate_left(04), self[4].rotate_right(04), self[5].rotate_left(04), self[1].rotate_left(12)]), 
+            Cube([self[3].rotate_right(08), self[0].rotate_left(04), self[4].rotate_right(04), self[5].rotate_left(04), self[2].rotate_left(04), self[1].rotate_left(00)]), 
+            Cube([self[3].rotate_right(12), self[4].rotate_right(04), self[5].rotate_left(04), self[2].rotate_left(04), self[0].rotate_left(04), self[1].rotate_left(04)]), 
+
+            // R on top
+            Cube([self[2].rotate_left(00), self[5].rotate_right(00), self[3].rotate_right(04), self[0].rotate_right(08), self[1].rotate_right(12), self[4].rotate_right(08)]),
+            Cube([self[2].rotate_left(04), self[3].rotate_right(04), self[0].rotate_right(08), self[1].rotate_right(12), self[5].rotate_right(00), self[4].rotate_right(12)]),
+            Cube([self[2].rotate_left(08), self[0].rotate_right(08), self[1].rotate_right(12), self[5].rotate_right(00), self[3].rotate_right(04), self[4].rotate_right(00)]),
+            Cube([self[2].rotate_left(12), self[1].rotate_right(12), self[5].rotate_right(00), self[3].rotate_right(04), self[0].rotate_right(08), self[4].rotate_right(04)]),
+
+            // O on top
+            Cube([self[4].rotate_right(08), self[0].rotate_right(00), self[1].rotate_right(04), self[5].rotate_right(08), self[3].rotate_right(12), self[2].rotate_left(00)]),
+            Cube([self[4].rotate_right(12), self[1].rotate_right(04), self[5].rotate_right(08), self[3].rotate_right(12), self[0].rotate_right(00), self[2].rotate_left(04)]),
+            Cube([self[4].rotate_right(00), self[5].rotate_right(08), self[3].rotate_right(12), self[0].rotate_right(00), self[1].rotate_right(04), self[2].rotate_left(08)]),
+            Cube([self[4].rotate_right(04), self[3].rotate_right(12), self[0].rotate_right(00), self[1].rotate_right(04), self[5].rotate_right(08), self[2].rotate_left(12)]),
+        ]
+    }
+
     rotate_ud!(rotate_u_cw,  0b1111_0000_0000_1111, 0, rotate_left,  (4, 3, 2, 1));
     rotate_ud!(rotate_u_ccw, 0b1111_0000_0000_1111, 0, rotate_right, (1, 2, 3, 4));
 
-    rotate_ud!(rotate_d_cw,  0b0000_1111_1111_0000, 5, rotate_left,  (1, 2, 3, 4));
-    rotate_ud!(rotate_d_ccw, 0b0000_1111_1111_0000, 5, rotate_right, (4, 3, 2, 1));
+    rotate_ud!(rotate_d_cw,  0b0000_1111_1111_0000, 5, rotate_right, (4, 3, 2, 1));
+    rotate_ud!(rotate_d_ccw, 0b0000_1111_1111_0000, 5, rotate_left,  (1, 2, 3, 4));
 
     rotate_lr!(rotate_l_cw,  0b1111_1111_0000_0000, 1, rotate_left,  (4, 5, 2, 0));
     rotate_lr!(rotate_l_ccw, 0b1111_1111_0000_0000, 1, rotate_right, (4, 0, 2, 5));
